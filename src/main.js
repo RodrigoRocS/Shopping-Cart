@@ -6,5 +6,6 @@ import { createProductElement } from './helpers/shopFunctions';
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 
 const productList = await fetchProductsList('computador');
+const secProduct = document.querySelector('.products');
 
-createProductElement(productList);
+productList.forEach((e) => secProduct.appendChild(createProductElement(e)));
