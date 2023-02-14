@@ -1,11 +1,11 @@
 export const fetchProduct = async (ProductID) => {
   if (!ProductID) throw new Error('ID não informado');
   try {
-    const productList = await fetch(`https://api.mercadolibre.com/items/${ProductID}`);
-    const data = await productList.json();
+    const productDetail = await fetch(`https://api.mercadolibre.com/items/${ProductID}`);
+    const data = await productDetail.json();
     return data;
   } catch (error) {
-    return error;
+    throw new Error('ID não informado');
   }
 };
 
@@ -16,6 +16,6 @@ export const fetchProductsList = async (QUERY) => {
     const data = await productList.json();
     return data.results;
   } catch (error) {
-    return error;
+    throw new Error('Termo de busca não informado');
   }
 };
