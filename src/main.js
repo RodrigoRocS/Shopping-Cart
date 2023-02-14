@@ -9,15 +9,21 @@ const productList = await fetchProductsList('computador');
 const secProduct = document.querySelector('.products');
 const loadings = document.getElementsByClassName('loading');
 const magicNumber = 1000;
+const errorMsg = 'Algum erro ocorreu, recarregue a página e tente novamente';
 
-const addProd = () => productList.forEach((e) => secProduct
-  .appendChild(createProductElement(e)));
-
+const addProd = () => {
+  if (productList.length > 0) {
+    productList.forEach((e) => secProduct
+      .appendChild(createProductElement(e)));
+  } else {
+    secProduct.appendChild(createCustomElement('span', 'error', errorMsg));
+  }
+};
 const loadingMsg = (time) => {
   secProduct.appendChild(createCustomElement('span', 'loading', 'carregando...'));
-  setTimeout(async () => {
+  setTimeout(() => {
+    addProd();
     if (loadings.length) loadings[0].remove();
-    await addProd();
   }, time);
 };
 
