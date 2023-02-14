@@ -5,7 +5,7 @@ export const fetchProduct = async (ProductID) => {
     const data = await productDetail.json();
     return data;
   } catch (error) {
-    throw new Error('ID não informado');
+    return error;
   }
 };
 
@@ -16,6 +16,6 @@ export const fetchProductsList = async (QUERY) => {
     const data = await productList.json();
     return data.results;
   } catch (error) {
-    throw new Error('Termo de busca não informado');
+    return error;
   }
 };
