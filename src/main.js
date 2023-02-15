@@ -3,7 +3,7 @@ import './style.css';
 import { fetchProductsList, fetchProduct } from './helpers/fetchFunctions';
 import { createProductElement, createCustomElement, createCartProductElement }
   from './helpers/shopFunctions';
-import { saveCartID } from './helpers/cartFunctions';
+import { getSavedCartIDs, saveCartID } from './helpers/cartFunctions';
 
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 const secProduct = document.querySelector('.products');
@@ -33,7 +33,20 @@ const addProd = async () => {
     secProduct.appendChild(createCustomElement('span', 'error', errorMsg));
   }
   addCart();
-};// adiciona msg de loading
+};
+const loadCart = () => {
+  const promises = getSavedCartIDs().map(async (e) => {
+    const cart = await fetchProduct(e);
+    return cart;
+  });
+  console.log(promises);
+  Promise.all(promises).then((data) => data.forEach((e) => {
+    const car = createProductElement(e);
+    const takeOl = document.querySelector('ol');
+    takeOl.appendChild(car);
+  }));
+};
+// adiciona msg de loading
 const loadingMsg = async () => {
   const loadings = createCustomElement('span', 'loading', 'carregando...');
   secProduct.appendChild(loadings);
@@ -42,3 +55,4 @@ const loadingMsg = async () => {
 };
 
 loadingMsg();
+loadCart();
