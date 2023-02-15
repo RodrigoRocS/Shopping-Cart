@@ -1,30 +1,44 @@
 import { searchCep } from './helpers/cepFunctions';
 import './style.css';
-import { fetchProductsList } from './helpers/fetchFunctions';
-import { createProductElement, createCustomElement } from './helpers/shopFunctions';
+import { fetchProductsList, fetchProduct } from './helpers/fetchFunctions';
+import { createProductElement, createCustomElement, createCartProductElement }
+  from './helpers/shopFunctions';
+import { saveCartID } from './helpers/cartFunctions';
 
 document.querySelector('.cep-button').addEventListener('click', searchCep);
-
-const productList = await fetchProductsList('computador');
 const secProduct = document.querySelector('.products');
-const loadings = document.getElementsByClassName('loading');
-const magicNumber = 1000;
-const errorMsg = 'Algum erro ocorreu, recarregue a página e tente novamente';
 
-const addProd = () => {
+const addCart = () => {
+  const addBtn = document.querySelectorAll('.product__add');
+  addBtn.forEach((e) => {
+    e.addEventListener('click', async (evt) => {
+      const takeProd = evt.target.closest('.product');
+      const takeProdId = takeProd.children[0].innerText;
+      saveCartID(takeProdId);
+      const cart = createCartProductElement(await fetchProduct(takeProdId));
+      const takeOl = document.querySelector('ol');
+      takeOl.appendChild(cart);
+    });
+  });
+};
+
+// adiciona produtos no catalogo
+const addProd = async () => {
+  const errorMsg = 'Algum erro ocorreu, recarregue a página e tente novamente';
+  const productList = await fetchProductsList('computador');
   if (productList.length > 0) {
     productList.forEach((e) => secProduct
       .appendChild(createProductElement(e)));
   } else {
     secProduct.appendChild(createCustomElement('span', 'error', errorMsg));
   }
-};
-const loadingMsg = (time) => {
-  secProduct.appendChild(createCustomElement('span', 'loading', 'carregando...'));
-  setTimeout(() => {
-    addProd();
-    if (loadings.length) loadings[0].remove();
-  }, time);
+  addCart();
+};// adiciona msg de loading
+const loadingMsg = async () => {
+  const loadings = createCustomElement('span', 'loading', 'carregando...');
+  secProduct.appendChild(loadings);
+  await addProd();
+  secProduct.removeChild(loadings);
 };
 
-loadingMsg(magicNumber);
+loadingMsg();
