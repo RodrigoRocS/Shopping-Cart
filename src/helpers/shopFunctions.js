@@ -46,19 +46,9 @@ export const getIdFromProduct = (product) => (
  * @param {Element} li - Elemento do produto a ser removido do carrinho.
  * @param {string} id - ID do produto a ser removido do carrinho.
  */
-const removeCartProduct = async (li, id) => {
+const removeCartProduct = (li, id) => {
   li.remove();
   removeCartID(id);
-  const totalPrice = document.querySelector('.total-price');
-  const promises = getSavedCartIDs().map(async (e) => {
-    const cart = await fetchProduct(e);
-    return cart;
-  });
-  const objProd = await Promise.all(promises);
-  const pegaValores = objProd.map((e) => e.base_price);
-  const sumTotal = pegaValores.reduce((acc, curr) => acc + curr, 0);
-  totalPrice.innerText = sumTotal;
-  localStorage.setItem('valor', JSON.stringify(sumTotal));
 };
 
 /**

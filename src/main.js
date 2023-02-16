@@ -10,17 +10,37 @@ import { saveCartID, getSavedCartIDs } from './helpers/cartFunctions';
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 const secProduct = document.querySelector('.products');
 const totalPrice = document.querySelector('.total-price');
+const takeOl = document.querySelector('ol');
 
 const subTotal = async () => {
-  const promises = getSavedCartIDs().map(async (e) => {
-    const cart = await fetchProduct(e);
-    return cart;
-  });
-  const objProd = await Promise.all(promises);
-  const pegaValores = objProd.map((e) => e.base_price);
-  const sumTotal = pegaValores.reduce((acc, curr) => acc + curr, 0);
+  const pegaValores = JSON.parse(localStorage.getItem('valor'));
+  const sumTotal = pegaValores.reduce((acc, curr) => acc + Number(curr), 0);
   totalPrice.innerText = sumTotal;
-  localStorage.setItem('valor', JSON.stringify(totalPrice.innerText));
+};
+
+const salvaValue = () => {
+  const pegalis = document.querySelectorAll('.cart__product > div > span > span');
+  const a = [];
+  pegalis.forEach((e) => {
+    a.push(e.innerHTML);
+  });
+  localStorage.removeItem('valor');
+  localStorage.setItem('valor', JSON.stringify(a));
+};
+
+const salvaCart = () => {
+  const pegaOl = document.querySelector('.cart__products');
+  localStorage.removeItem('productCart');
+  localStorage.setItem('productCart', JSON.stringify(pegaOl.innerHTML));
+};
+
+const removeProd = () => {
+  const pegalis = document.querySelectorAll('.cart__product');
+  pegalis.forEach((e) => e.addEventListener('click', () => {
+    salvaValue();
+    salvaCart();
+    subTotal();
+  }));
 };
 
 const addCart = () => {
@@ -31,8 +51,10 @@ const addCart = () => {
       const takeProdId = takeProd.children[0].innerText;
       saveCartID(takeProdId);
       const cart = createCartProductElement(await fetchProduct(takeProdId));
-      const takeOl = document.querySelector('ol');
       takeOl.appendChild(cart);
+      salvaValue();
+      removeProd();
+      salvaCart();
       subTotal();
     });
   });
@@ -58,7 +80,6 @@ const loadCart = async () => {
   });
   Promise.all(promises).then((data) => data.forEach((e) => {
     const car = createCartProductElement(e);
-    const takeOl = document.querySelector('ol');
     takeOl.appendChild(car);
   }));
 };
@@ -72,6 +93,6 @@ const loading = async () => {
 };
 
 window.onload = () => {
-  totalPrice.innerText = JSON.parse(localStorage.getItem('valor'));
   loading();
+  // subTotal();
 };
