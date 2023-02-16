@@ -1,12 +1,27 @@
 import { searchCep } from './helpers/cepFunctions';
 import './style.css';
 import { fetchProductsList, fetchProduct } from './helpers/fetchFunctions';
-import { createProductElement, createCustomElement, createCartProductElement }
-  from './helpers/shopFunctions';
-import { getSavedCartIDs, saveCartID } from './helpers/cartFunctions';
+import {
+  createProductElement, createCustomElement,
+  createCartProductElement,
+} from './helpers/shopFunctions';
+import { saveCartID, getSavedCartIDs } from './helpers/cartFunctions';
 
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 const secProduct = document.querySelector('.products');
+const totalPrice = document.querySelector('.total-price');
+
+const subTotal = async () => {
+  const promises = getSavedCartIDs().map(async (e) => {
+    const cart = await fetchProduct(e);
+    return cart;
+  });
+  const objProd = await Promise.all(promises);
+  const pegaValores = objProd.map((e) => e.base_price);
+  const sumTotal = pegaValores.reduce((acc, curr) => acc + curr, 0);
+  totalPrice.innerHTML = sumTotal;
+  localStorage.setItem('valor', JSON.stringify(totalPrice.innerHTML));
+};
 
 const addCart = () => {
   const addBtn = document.querySelectorAll('.product__add');
@@ -18,6 +33,7 @@ const addCart = () => {
       const cart = createCartProductElement(await fetchProduct(takeProdId));
       const takeOl = document.querySelector('ol');
       takeOl.appendChild(cart);
+      subTotal();
     });
   });
 };
@@ -34,25 +50,29 @@ const addProd = async () => {
   }
   addCart();
 };
+
 const loadCart = () => {
   const promises = getSavedCartIDs().map(async (e) => {
     const cart = await fetchProduct(e);
     return cart;
   });
-  console.log(promises);
   Promise.all(promises).then((data) => data.forEach((e) => {
-    const car = createProductElement(e);
+    const car = createCartProductElement(e);
     const takeOl = document.querySelector('ol');
     takeOl.appendChild(car);
   }));
 };
 // adiciona msg de loading
-const loadingMsg = async () => {
+const loading = async () => {
   const loadings = createCustomElement('span', 'loading', 'carregando...');
   secProduct.appendChild(loadings);
   await addProd();
   secProduct.removeChild(loadings);
+  loadCart();
+  // subTotal();
 };
 
-loadingMsg();
-loadCart();
+window.onload = () => {
+  totalPrice.innerHTML = JSON.parse(localStorage.getItem('valor'));
+  loading();
+};
