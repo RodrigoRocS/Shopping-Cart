@@ -19,8 +19,8 @@ const subTotal = async () => {
   const objProd = await Promise.all(promises);
   const pegaValores = objProd.map((e) => e.base_price);
   const sumTotal = pegaValores.reduce((acc, curr) => acc + curr, 0);
-  totalPrice.innerHTML = sumTotal;
-  localStorage.setItem('valor', JSON.stringify(totalPrice.innerHTML));
+  totalPrice.innerText = sumTotal;
+  localStorage.setItem('valor', JSON.stringify(totalPrice.innerText));
 };
 
 const addCart = () => {
@@ -51,7 +51,7 @@ const addProd = async () => {
   addCart();
 };
 
-const loadCart = () => {
+const loadCart = async () => {
   const promises = getSavedCartIDs().map(async (e) => {
     const cart = await fetchProduct(e);
     return cart;
@@ -69,10 +69,9 @@ const loading = async () => {
   await addProd();
   secProduct.removeChild(loadings);
   loadCart();
-  // subTotal();
 };
 
-window.onload = async () => {
-  totalPrice.innerHTML = JSON.parse(localStorage.getItem('valor'));
-  await loading();
+window.onload = () => {
+  totalPrice.innerText = JSON.parse(localStorage.getItem('valor'));
+  loading();
 };

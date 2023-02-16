@@ -57,7 +57,7 @@ const removeCartProduct = async (li, id) => {
   const objProd = await Promise.all(promises);
   const pegaValores = objProd.map((e) => e.base_price);
   const sumTotal = pegaValores.reduce((acc, curr) => acc + curr, 0);
-  totalPrice.innerHTML = sumTotal;
+  totalPrice.innerText = sumTotal;
   localStorage.setItem('valor', JSON.stringify(sumTotal));
 };
 
