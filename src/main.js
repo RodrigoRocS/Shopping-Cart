@@ -72,7 +72,7 @@ const loading = async () => {
   // subTotal();
 };
 
-window.onload = () => {
+window.onload = async () => {
   totalPrice.innerHTML = JSON.parse(localStorage.getItem('valor'));
-  loading();
+  await loading();
 };
