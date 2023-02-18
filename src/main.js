@@ -1,4 +1,4 @@
-import { searchCep } from './helpers/cepFunctions';
+import { searchCep, getAddress } from './helpers/cepFunctions';
 import './style.css';
 import { fetchProductsList, fetchProduct } from './helpers/fetchFunctions';
 import {
@@ -34,14 +34,15 @@ const salvaCart = () => {
   localStorage.setItem('productCart', JSON.stringify(pegaOl.innerHTML));
 };
 
-const removeProd = () => {
-  const pegalis = document.querySelectorAll('.cart__product');
-  pegalis.forEach((e) => e.addEventListener('click', () => {
-    salvaValue();
-    salvaCart();
-    subTotal();
-  }));
-};
+// const removeProd = () => {
+//   const pegalis = document.querySelectorAll('.cart__product');
+//   pegalis.forEach((e) => e.addEventListener('click', () => {
+//     e.remove();
+//     salvaValue();
+//     salvaCart();
+//     subTotal();
+//   }));
+// };
 
 const addCart = () => {
   const addBtn = document.querySelectorAll('.product__add');
@@ -53,7 +54,7 @@ const addCart = () => {
       const cart = createCartProductElement(await fetchProduct(takeProdId));
       takeOl.appendChild(cart);
       salvaValue();
-      removeProd();
+      // removeProd();
       salvaCart();
       subTotal();
     });
@@ -83,7 +84,7 @@ const loadCart = async () => {
     takeOl.appendChild(car);
   }));
 };
-// adiciona msg de loading
+// adiciona msg de loading e carrega a pagina
 const loading = async () => {
   const loadings = createCustomElement('span', 'loading', 'carregando...');
   secProduct.appendChild(loadings);
@@ -94,5 +95,4 @@ const loading = async () => {
 
 window.onload = () => {
   loading();
-  // subTotal();
 };
