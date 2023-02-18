@@ -1,5 +1,6 @@
 import { removeCartID, getSavedCartIDs } from './cartFunctions';
 import { fetchProduct } from './fetchFunctions';
+import { subTotal, salvaValue } from './calcFunctions';
 
 // Esses comentários que estão antes de cada uma das funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições!
@@ -41,22 +42,6 @@ export const getIdFromProduct = (product) => (
   product.querySelector('span.product__id').innerText
 );
 
-const subTotal = () => {
-  const totalPrice = document.querySelector('.total-price');
-  const pegaValores = JSON.parse(localStorage.getItem('valor'));
-  const sumTotal = pegaValores.reduce((acc, curr) => acc + Number(curr), 0);
-  totalPrice.innerText = sumTotal;
-};
-
-const salvaValue = () => {
-  const pegalis = document.querySelectorAll('.cart__product > div > span > span');
-  const a = [];
-  pegalis.forEach((e) => {
-    a.push(e.innerHTML);
-  });
-  localStorage.removeItem('valor');
-  localStorage.setItem('valor', JSON.stringify(a));
-};
 /**
  * Função que remove o produto do carrinho.
  * @param {Element} li - Elemento do produto a ser removido do carrinho.

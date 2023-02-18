@@ -6,47 +6,11 @@ import {
   createCartProductElement,
 } from './helpers/shopFunctions';
 import { saveCartID, getSavedCartIDs } from './helpers/cartFunctions';
+import { subTotal, salvaValue } from './helpers/calcFunctions';
 
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 const secProduct = document.querySelector('.products');
-const totalPrice = document.querySelector('.total-price');
 const takeOl = document.querySelector('ol');
-
-const subTotal = () => {
-  const pegaValores = JSON.parse(localStorage.getItem('valor'));
-  if (pegaValores === null) {
-    totalPrice.innerHTML = 0;
-  } else {
-    const sumTotal = pegaValores.reduce((acc, curr) => acc + Number(curr), 0);
-    totalPrice.innerText = sumTotal;
-  }
-};
-
-const salvaValue = () => {
-  const pegalis = document.querySelectorAll('.cart__product > div > span > span');
-  const a = [];
-  pegalis.forEach((e) => {
-    a.push(e.innerHTML);
-  });
-  localStorage.removeItem('valor');
-  localStorage.setItem('valor', JSON.stringify(a));
-};
-
-const salvaCart = () => {
-  const pegaOl = document.querySelector('.cart__products');
-  localStorage.removeItem('productCart');
-  localStorage.setItem('productCart', JSON.stringify(pegaOl.innerHTML));
-};
-
-// const removeProd = () => {
-//   const pegalis = document.querySelectorAll('.cart__product');
-//   pegalis.forEach((e) => e.addEventListener('click', () => {
-//     e.remove();
-//     salvaValue();
-//     salvaCart();
-//     subTotal();
-//   }));
-// };
 
 const addCart = () => {
   const addBtn = document.querySelectorAll('.product__add');
@@ -58,8 +22,6 @@ const addCart = () => {
       const cart = createCartProductElement(await fetchProduct(takeProdId));
       takeOl.appendChild(cart);
       salvaValue();
-      // removeProd();
-      salvaCart();
       subTotal();
     });
   });
