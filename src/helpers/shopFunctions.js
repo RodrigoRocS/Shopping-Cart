@@ -41,7 +41,7 @@ export const getIdFromProduct = (product) => (
   product.querySelector('span.product__id').innerText
 );
 
-const subTotal = async () => {
+const subTotal = () => {
   const totalPrice = document.querySelector('.total-price');
   const pegaValores = JSON.parse(localStorage.getItem('valor'));
   const sumTotal = pegaValores.reduce((acc, curr) => acc + Number(curr), 0);

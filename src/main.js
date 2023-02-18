@@ -12,10 +12,14 @@ const secProduct = document.querySelector('.products');
 const totalPrice = document.querySelector('.total-price');
 const takeOl = document.querySelector('ol');
 
-const subTotal = async () => {
+const subTotal = () => {
   const pegaValores = JSON.parse(localStorage.getItem('valor'));
-  const sumTotal = pegaValores.reduce((acc, curr) => acc + Number(curr), 0);
-  totalPrice.innerText = sumTotal;
+  if (pegaValores === null) {
+    totalPrice.innerHTML = 0;
+  } else {
+    const sumTotal = pegaValores.reduce((acc, curr) => acc + Number(curr), 0);
+    totalPrice.innerText = sumTotal;
+  }
 };
 
 const salvaValue = () => {
@@ -95,4 +99,5 @@ const loading = async () => {
 
 window.onload = () => {
   loading();
+  subTotal();
 };
