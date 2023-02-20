@@ -11,7 +11,7 @@ import { subTotal, salvaValue } from './helpers/calcFunctions';
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 const secProduct = document.querySelector('.products');
 const takeOl = document.querySelector('ol');
-
+// adiciona produtos ao carrinho
 const addCart = () => {
   const addBtn = document.querySelectorAll('.product__add');
   addBtn.forEach((e) => {
@@ -39,7 +39,7 @@ const addProd = async () => {
   }
   addCart();
 };
-
+// carrega o carrinho após atualizar a pagina
 const loadCart = async () => {
   const promises = getSavedCartIDs().map(async (e) => {
     const cart = await fetchProduct(e);
